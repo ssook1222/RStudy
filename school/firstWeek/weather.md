@@ -34,8 +34,8 @@ str(weather)
 ### 문제 4. 일시 변수를 이용해서 요일(월~일)을 파악한 후 이를 요일이라는 이름의 변수에 지정하라.   그리고 요일 변수의 척도를 문자에서 범주로 바꾸어라.
 
 ```r
-요일<-weekdays(weather$일시)
-요일<-as.factor(요일)
+weather$요일<-weekdays(weather$일시)
+weather$요일<-as.factor(요일)
 ```
 
 범주로 변경하면 **총 7개의 범주**로 나뉘어진다.
