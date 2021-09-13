@@ -35,8 +35,51 @@ str(weather)
 
 ```r
 weather$요일<-weekdays(weather$일시)
-weather$요일<-as.factor(요일)
+weather$요일<-as.factor(weather$요일)
 ```
 
 범주로 변경하면 **총 7개의 범주**로 나뉘어진다.
 
+
+### 문제 5. 14개 변수에 대해 summary()를 통해 검토해 보시오.
+```r
+summary(weather)
+```
+이 출력결과에서 **NA** 's로 표시된 것은 **결측치**들의 개수
+
+### 문제 6. '일강수량' 변수에 대해 분산을 구해 보시오.
+분산 등 기술 통계량을 구하기 위해서는 결측치를 사전에 제거해야 한다.     
+아래와 같이 **na.rm=T**를 사용해 제거하자.
+```r
+var(weather$일강수량,na.rm=T) //na를 제거하겠다는 의미.
+```
+
+### 문제 7. 요일과 요일.구분에 대해 빈도수를 각각 구하시오
+
+- 빈도수 확인
+
+```r
+table(weather$요일.구분)
+weather$요일<-factor(weather$요일,levels=c("월요일","화요일","수요일","목요일","금요일","토요일","일요일"))
+table(weather$요일)
+```
+c() : 컴바인 함수, 해당 함수를 이용해 levels를 지정해준다.     
+지정해준 레벨로 요일별로 재정렬이 가능하다.
+
+> **c() 함수의 추가적인 사용법**
+```r
+v1<-c(1,3,4,5,6)
+v2<-c(1:5) //연속된 수 입력
+```
+
+### 문제 8. 요일과 요일.구분을 동시에 고려한 qplot을 그려보시오.
+```r
+library(ggplot2)
+qplot(data=weather,요일,fill=요일.구분)+theme(text=element_text(size = 12,family = "NanumGothic"))
+```
+
+### 문제 9. 평균기온과 평균.상대습도에 대해 히스토그램을 그리시오.
+```r
+hist(weather$평균기온, breaks = seq(-20,50,by=1))
+hist(weather$평균.상대습도, breaks = seq(0,100,by=1))
+```
