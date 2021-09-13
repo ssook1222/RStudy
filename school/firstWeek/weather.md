@@ -83,3 +83,4 @@ qplot(data=weather,요일,fill=요일.구분)+theme(text=element_text(size = 12,
 hist(weather$평균기온, breaks = seq(-20,50,by=1))
 hist(weather$평균.상대습도, breaks = seq(0,100,by=1))
 ```
+
