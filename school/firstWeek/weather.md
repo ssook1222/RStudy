@@ -73,12 +73,22 @@ v2<-c(1:5) //연속된 수 입력
 ```
 
 ### 문제 8. 요일과 요일.구분을 동시에 고려한 qplot을 그려보시오.
+
+![4c8ab2aa-589d-4f77-90e2-8a8e318b75ff](https://user-images.githubusercontent.com/60427387/133054201-aba4e51a-fb2f-42f2-a83b-72eb8dd9727c.png)
+
 ```r
 library(ggplot2)
 qplot(data=weather,요일,fill=요일.구분)+theme(text=element_text(size = 12,family = "NanumGothic"))
 ```
 
 ### 문제 9. 평균기온과 평균.상대습도에 대해 히스토그램을 그리시오.
+- 평균기온
+![kion](https://user-images.githubusercontent.com/60427387/133054337-4c443806-2e56-44d6-bb23-b3d3287c4a57.png)
+
+- 평균상대습도
+![e86d6d0a-4943-4b91-8700-6f27edb5dfb2](https://user-images.githubusercontent.com/60427387/133054349-d441124d-4d49-44cc-bc15-d3a798ca9c0f.png)
+
+
 ```r
 hist(weather$평균기온, breaks = seq(-20,50,by=1))
 hist(weather$평균.상대습도, breaks = seq(0,100,by=1))
