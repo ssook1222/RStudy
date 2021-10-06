@@ -34,12 +34,20 @@ midwest_add<-read.csv("./school/data/midwest_add.csv",fileEncoding ="euc-kr",str
 table(is.na(midwest_add$senior)) #결측치 확인
 midwest<-left_join(midwest,midwest_add,by=c("county"="region"))
 ```
-county에 중복되는 사례가 있어서 join시 중복 사례에 같은 값이 붙다보니 case 수가 급증함.
+county에 중복되는 사례가 있어서 join시 중복 사례에 같은 값이 붙다보니 case 수가 급증함.    
+county와 region은 같은 변수이지만, 문제는 **이 두 변수에 대한 측정값이 중복**으로 나옴.
+중복된 값끼리 조합을 이루어서 원래는 4개의 케이스만 만들어져야 하는데 중복으로 나오기에     
+총 16개의 케이스가 만들어짐. (4*4=16)
+
+이 문제를 distinct로 해결하려 하였으나...
 
 ### 문제 6. 통합 midwest 데이터 프레임에 중복 사례가 있다면 제거하라.
 ```r
 midwest<-midwest%>%distinct(PID,county,state,.keep_all = T)
 ```
+변수 결과 동일하게 나오나, **중복 사례가 있는 경우 중복된 케이스의 첫 행 1개**만 나옴.    
+따라서 unique한 식별값이 아니면 함부로 join을 하면 안 됨.     
+pid를 기준으로 join을 진행해야 함.   
 
 ### 문제 7. 주 별로 senior 인구수 합계를 구하시오.
 방법1
@@ -60,7 +68,7 @@ midwest%>%filter(!is.na(senior))%>%group_by(state)%>%summarise(sum_senior=sum(se
 library(tidyr)
 midwest<-midwest%>%drop_na()
 ```
-dropna는 na(결측치)를 제거하는 함수
+dropna는 na(결측치)를 제거하는 함수이다.
 
 ### 문제 9. 평균 아시아계 인구수가 가장 적은 category 세 개를 구하시오.
 ```r
