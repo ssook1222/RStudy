@@ -77,7 +77,7 @@ table(midwest_test$grade)
 #income 전체 평균을 구하시오. 
 
 midwest_income<-read.csv("./school/data/midwest_income.csv",fileEncoding ="euc-kr",stringsAsFactors = F)
-midwest_new<-left_join(midwest,midwest_income,by=c("PID"="PID"))
+midwest_new<-left_join(midwest_test,midwest_income,by=c("PID"="PID"))
 mean(midwest_new$income, na.rm = T)
 
 #67266.05
