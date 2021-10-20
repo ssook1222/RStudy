@@ -8,6 +8,7 @@ list_job <- read_excel("./school/data/2015 codebook.xlsx",sheet = 2)
 #데이터 타입이 다르면 에러가 발생
 str(welfare7$job)
 str(list_job$job)
+welfare7$job <- as.factor(welfare7$job)
 #타입이 다른 경우 데이터 타입을 맞춰줘야 함.
 list_job$job <- as.factor(list_job$job)
 #join 진행
