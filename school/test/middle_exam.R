@@ -129,11 +129,12 @@ str(middle_test2)
 
 #문제 16
 #틀린 문제
+middle_test$time<- ifelse(middle_test$time==0,NA,time)
 middle_test<-middle_test%>%
   mutate(
     problem=time+claim+error
   )
 
-table(middle_test$problem)
+table(!is.na(middle_test$problem))
 
 
