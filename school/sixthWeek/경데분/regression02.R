@@ -63,7 +63,7 @@ lm_order[4,5] #앞은 행의 번호를, 뒤는 열의 번호를.
 
 #문제 13
 #회귀분석 실시 함수(아래는 다중회귀분석 예제)
-lm_order.M1<-lm(expense~visit+duration+order+return+age,data=lm_order)
+lm_order.M1<-lm(expense~visit+duration+order+morning+return+age,data=lm_order)
 #객체(여러 리스트가 모인 형태). 12개의 리스트
 
 #문제 14 + 문제 15
@@ -94,12 +94,82 @@ ks.test(lm_order$expense, pnorm, mean =mean(lm_order$expense),
 #10,484,659에 해당되는 case는회귀식 추정에 지나치게 많은 영향을 미치므로 제거
 #residuals VS Leverage 그래프의 10,484,659 (쿡의 거리)
 
+#문제 16
+#등분산성, 선형성에 영향을 미치는 케이스 제거
+lm_order<-lm_order%>%filter(case!=517, case!=606, case!=760, #선형성
+                            case!=15,case!=564,case!=748) #회귀분석에 너무 많은 영향
 
+#그 후 13부터 반복하며 다시 점검하고 반복
+#선형성, 등분산성, 정규성에 영향을 미치는 사례와 회귀 분석에 영향을 미치는 사례 제거 
+lm_order<-lm_order%>%filter(case!=427, case!=464, case!=760,
+                            case!=645,case!=867,case!=897)
 
+lm_order<-lm_order%>%filter(case!=425, case!=257, case!=462,
+                            case!=642,case!=862,case!=892)
 
+lm_order<-lm_order%>%filter(case!=422, case!=459, case!=753,
+                            case!=638,case!=856,case!=886)
 
+# 이 과정을 계속 반복
 
+#문제 17
+#로그를 취해 정규성을 개선하고자 함.
+#자연로그 - log() 로 변경
+lm_order <- lm_order%>%mutate(ln_expense=log(expense))
 
+#정규성 검토 진행
+#유의하지 않아야 정규 분포를 만족
+ks.test(lm_order$ln_expense, pnorm, mean =mean(lm_order$expense),
+        sd=sd(lm_order$expense)) 
+
+#여전히 2p-value가 a보다 유의함. 정규성 조건을 만족하지 못함
+
+lm_order.M2<-lm(ln_expense~visit+duration+order+morning+return+age,data=lm_order)
+
+#문제 18
+#다중 회귀식 추정 결과 확인
+summary(lm_order.M1)
+#residual : 잔차
+#intercept가 a 값(절편), 나머지 독립변수는 b1,b2..
+# r에서는 2p value이므로 2a와 2p value를 비교
+# ***=0.001, **=0.01, *=0.05, .=0.1, " "=1
+# 아무리 p value가 유의해도 +,- 방향성이 다르면 채택 불가
+
+summary(lm_order.M2)
+
+#M1은 2,4,6 채택. M2는 1,2,4,6 채택
+#M2의 모형 적합도는 더 떨어지나 가설 채택 수가 증가
+#그래서 모형적합도(GoF)를 기준으로 모형을 채택할 지 등 기준을 설정해줘야 함.
+
+#문제 19
+#오차의 자기상관 검토
+
+library(car)
+#자기상관 테스트
+durbinWatsonTest(lm_order.M1)
+#p-value가 유의하지 않은게 오차의 자기상관이 없음.
+#지금은 오차의 자기 상관이 약하게 있는 상태(autocorrelation 참고)
+#독립성 조건 만족 불가.
+
+#문제 20
+#독립변수의 다중공선성을 검사하시오.
+library(car)
+vif(lm_order.M1)
+#모두 5.3 기준값보다 작게 나옴. 다중공선성을 유발하는 변수는 없음.
+
+#문제 21
+#표준화 회귀계수 추정치를 가지고 추정
+#H2,H4,H6만 채택되었으므로 유의한 회귀계수 추정치에 대해서만 표준화 회귀계수 추정치 절댓값 크기를 비교
+
+install.packages("QuantPsyc")
+library(QuantPsyc)
+
+lm.beta(lm_order.M1)
+#계수 추정치, 표준화 회귀계수 추정치
+#근데 각 변수마다 측정단위가 다름. 그래서 어떤 변수가 상대적으로 더 중요한지
+#표준화 회귀계수 추정치를 사용. 이를 이용해 더 상대적으로 중요한 변수를 알 수 있음.
+#b2,b4,b6에 대해서만 비교
+#morning이 상대적으로 중요. 
 
 
 
