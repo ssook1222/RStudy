@@ -171,5 +171,40 @@ lm.beta(lm_order.M1)
 #b2,b4,b6에 대해서만 비교
 #morning이 상대적으로 중요. 
 
+#문제22
+
+#예측 시 추정된 회귀식을 이용해 예측을 진행
+
+#가설검정과 예측은 좀 다름.
+#추정된 회귀식을 작성시 pvalue 기준으로 유의한 변수만 작성.
+#+,- 방향과 상관없음
+
+#expense를 예측해보시오.
+#인과관계 규명 외에도 예측도 하나의 목적
+lm_order.predict<-read.csv("./school/data/predict.csv", fileEncoding ="euc-kr", stringsAsFactors = F)
+
+# lm_order.M1에는 유의하지 않은 변수(return)가 있으므로 해당 변수의 값을 모두 0으로 변경
+lm_order.predict$return<-0
+#추정한 회귀식으로 예측
+predict(lm_order.M1,newdata = lm_order.predict)
+
+
+#문제 23
+#더미변수 추가, 추가 후 정당성 확인
+
+#정당성 확인법, 이 두 조건을 다 만족해야 함.
+#1.추가 후 모델의 r^2 adj가 추가 전 모델의 r^2 adj보다 커야 함.
+#2.r^2(r^2:추가후 모델 - r^2:추가 전 모델)가 F분포를 그려야 함. 그때 p value가 유의수준보다 작아야 함.
+
+lm_order.M3 <- lm(expense~visit+duration+order+morning+return+age+gender+payment,data=lm_order)
+
+summary(lm_order.M3) #증가하긴 했으나, 이것이 유의한지는
+#f통계를 통해 확인해야 함.
+
+#f통계로 확인
+anova(lm_order.M1,lm_order.M3) #0.05보다 작으므로 유의한 증가력
+#의미가 있는 추가였음. 종속변수를 설명해주는 역할을 한다는 의미
+
+
 
 
