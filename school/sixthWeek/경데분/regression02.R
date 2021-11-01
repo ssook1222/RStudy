@@ -205,6 +205,72 @@ summary(lm_order.M3) #증가하긴 했으나, 이것이 유의한지는
 anova(lm_order.M1,lm_order.M3) #0.05보다 작으므로 유의한 증가력
 #의미가 있는 추가였음. 종속변수를 설명해주는 역할을 한다는 의미
 
+#문제 24
+#M3가 채택된다면, 남성에 비해(준거집단, 0) 여성이, 신용카드나 간편결제가
+#DV에 미치는 영향이 유의한지 확인하라(하나 남는 걸 준거집단으로)
+
+#결제수단은 집단이 3개로 나뉘므로, dv는 2개(3-1)
+#계좌이체에 비해 라고 적혀있으므로 계좌이체는 준거집단.
+#간편결제는(1,0) / 신용카드는 (0,1) / 계좌이체는(0,0)이다.
+
+#값을 변경할 때 factor(변수, level=c())를 이용해 순서를 잡아줘야 함.
+
+#변경 전 구조 확인
+str(lm_order$gender) 
+str(lm_order$payment)
+
+contrasts(lm_order$gender)
+contrasts(lm_order$payment)
+#앞에 위치한 변수를 준거집단으로 생각했다는 의미
+
+#따라서 순서를 바꿔 범주형 척도를 변경해줘야 함.
+lm_order$gender <- factor(lm_order$gender,levels=c("Male","Female"))
+lm_order$payment <- factor(lm_order$payment,levels=c("계좌이체","간편결제","신용카드"))
+
+#이렇게 한 후, M3를 다시 만들고 추정
+lm_order.M3 <- lm(expense~visit+duration+order+morning+return+age+gender+payment,data=lm_order)
+summary(lm_order.M3)
+
+#더미변수는 준거집단과 비교했을 때 결과가 나옴.
+
+#문제 25
+#가입경로에 따라 모델을 구분하고자 한다.
+#가입경로에 따라 구분해 두 개의 다중회귀식 subset을 만드시오.
+
+#필터링해서 subset을 2개로 나눔
+#lm 만들 때 subset 옵션에 조건을 넣어 만들어주면 됨.
+
+#빈도수 체크
+table(lm_order$path)
+
+lm_order.M3_s1 <- lm(expense~visit+duration+order+morning+return+age+gender+payment,
+                      data=lm_order,
+                      subset=(path %in% c("Banner","Facebook")))
+
+lm_order.M3_s2 <- lm(expense~visit+duration+order+morning+return+age+gender+payment,
+                      data=lm_order,
+                      subset=(path %in% c("Instagram","Kakao","Youtube")))
+
+summary(lm_order.M3_s1) #1,2,4,6 유의
+summary(lm_order.M3_s2) #1,2,4,6,7 유의
+#전체가 아니라 부분으로 봤을 때 해석이 또 다름
+
+#문제 26
+# 새로운 변수 추가(timeXincome => 상호작용 변수)
+# 그 후 설명력 비교
+
+lm_order.M4 <- lm(expense~visit+duration+order+morning+return+age+gender+payment+time*income,data=lm_order)
+#time*income = time, income, timeXincome
+summary(lm_order.M4)
+
+anova(lm_order.M3)
+anova(lm_order.M4)
+#income에 따라 다 증가하긴 하나
+#time*income이 -임.
+#집단을 2개로 쪼갰을 때 가입기간에 따라 다 증가하긴 하나
+#증가의 폭이 다름. 가입기간이 길수록 소득 증가에 따라 expense 증가폭이 작음(둔화)
+
+
 
 
 
