@@ -50,8 +50,8 @@ ggplot(mpg,aes(city,highway,color=cyl))+geom_point(aes(shape=drv))+
 midwest <- ggplot2::midwest 
 ggplot(midwest,aes(poptotal, popasian))+geom_point()
 ggplot(midwest,aes(poptotal, popasian))+geom_point()+xlim(0,350000)+ylim(0,5000)
-
-
+ggplot(midwest,aes(poptotal, popasian,color=state))+geom_point(aes(shape=state))+xlim(0,350000)+ylim(0,5000)
+ggplot(midwest,aes(poptotal, popasian,color=state))+geom_point(aes(shape=state))+xlim(0,350000)+ylim(0,5000)+geom_smooth()
 
 
 
