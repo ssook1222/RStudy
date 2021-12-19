@@ -32,6 +32,8 @@ top10 <- frequency %>% group_by(president)%>%slice_max(n, n=10)%>% #앞은 n은 
 top10 <- frequency %>% group_by(president)%>%slice_max(n, n=10,with_ties = F)%>% #앞은 n은 변수, 뒤는 개수
   print(n=Inf) #단점은 앞에 있는 단어에서 잘림
 
+frequency %>% group_by(president)%>%slice_max(n, n=10,with_ties = F)
+
 #빈도수 상위 10개에 대한 막대 그래프 만들기
 ggplot(top10, aes(reorder(word,n),n,fill=president))+ #오름차순, 대통령별로 색상 다르게
   geom_bar(stat="identity")+
